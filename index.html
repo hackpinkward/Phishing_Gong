@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gong | Welcome</title>
+    <style>
+        :root {
+            --gong-purple: #8b5cf6;
+            --gong-dark-purple: #7c3aed;
+            --gong-darker-purple: #6d28d9;
+            --gong-light-purple: #ede9fe;
+            --gong-white: #ffffff;
+            --gong-gray: #f8fafc;
+            --gong-dark-gray: #64748b;
+            --gong-text: #1e293b;
+            --gong-border: #e2e8f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--gong-purple) 0%, var(--gong-darker-purple) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        /* 右侧折角设计 - 增大视觉效果 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 50vw 100vh 0;
+            border-color: transparent var(--gong-darker-purple) transparent transparent;
+            z-index: 1;
+            opacity: 0.9;
+        }
+        
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 0 40vw 100vh 0;
+            border-color: transparent var(--gong-purple) transparent transparent;
+            z-index: 2;
+            opacity: 0.7;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            width: 100%;
+            max-width: 480px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            z-index: 10;
+            margin: 40px 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--gong-purple) 0%, var(--gong-darker-purple) 100%);
+            color: white;
+            padding: 50px 40px 35px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="white" opacity="0.1"/><circle cx="75" cy="75" r="1" fill="white" opacity="0.1"/><circle cx="50" cy="10" r="0.5" fill="white" opacity="0.1"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .logo {
+            position: relative;
+            z-index: 1;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .logo-icon svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+        }
+        
+        .header h1 {
+            position: relative;
+            z-index: 1;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        
+        .header p {
+            position: relative;
+            z-index: 1;
+            font-size: 16px;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+        
+        .content {
+            padding: 50px 40px;
+        }
+        
+        .form-section {
+            margin-bottom: 30px;
+        }
+        
+        .form-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gong-text);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 25px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 500;
+            color: var(--gong-text);
+            font-size: 14px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 18px 20px;
+            border: 2px solid var(--gong-border);
+            border-radius: 12px;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            background: var(--gong-white);
+            color: var(--gong-text);
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--gong-purple);
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
+            transform: translateY(-1px);
+        }
+        
+        input::placeholder {
+            color: var(--gong-dark-gray);
+        }
+        
+        /* Hide browser validation messages */
+        input:invalid {
+            box-shadow: none;
+        }
+        
+        /* Hide any browser validation tooltips */
+        input::-webkit-validation-bubble-message {
+            display: none;
+        }
+        
+
+        
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--gong-purple) 0%, var(--gong-darker-purple) 100%);
+            color: white;
+            border: none;
+            padding: 18px 20px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 25px;
+        }
+        
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        .login-btn:active {
+            transform: translateY(0);
+        }
+        
+        .forgot-password {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+        
+        .forgot-password a {
+            color: var(--gong-purple);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        
+        .forgot-password a:hover {
+            color: var(--gong-darker-purple);
+            text-decoration: underline;
+        }
+        
+
+        
+        .demo-section {
+            background: var(--gong-light-purple);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .demo-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gong-darker-purple);
+            margin-bottom: 8px;
+        }
+        
+        .demo-text {
+            font-size: 14px;
+            color: var(--gong-dark-gray);
+            margin-bottom: 16px;
+        }
+        
+        .demo-btn {
+            background: var(--gong-white);
+            color: var(--gong-purple);
+            border: 2px solid var(--gong-purple);
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: inline-block;
+        }
+        
+        .demo-btn:hover {
+            background: var(--gong-purple);
+            color: white;
+            transform: translateY(-1px);
+        }
+        
+        .footer {
+            background: var(--gong-gray);
+            padding: 35px 40px;
+            text-align: center;
+            border-top: 1px solid var(--gong-border);
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-links a {
+            color: var(--gong-dark-gray);
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s ease;
+        }
+        
+        .footer-links a:hover {
+            color: var(--gong-purple);
+        }
+        
+        .footer-text {
+            color: var(--gong-dark-gray);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+        }
+        
+        .modal-content {
+            background: var(--gong-white);
+            margin: 10% auto;
+            padding: 40px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--gong-border);
+            position: relative;
+        }
+        
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            color: var(--gong-dark-gray);
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+        
+        .close:hover {
+            color: var(--gong-purple);
+        }
+        
+        .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gong-purple);
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(139, 92, 246, 0.1);
+        }
+        
+        .modal-message {
+            font-size: 16px;
+            color: var(--gong-text);
+            line-height: 1.6;
+            margin-bottom: 25px;
+        }
+        
+        .modal-link {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--gong-purple) 0%, var(--gong-darker-purple) 100%);
+            color: white;
+            padding: 14px 28px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+        }
+        
+        .modal-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                margin: 30px 20px;
+                border-radius: 20px;
+            }
+            
+            .header {
+                padding: 40px 30px 30px;
+            }
+            
+            .content {
+                padding: 40px 30px;
+            }
+            
+            .footer {
+                padding: 30px 30px;
+            }
+            
+            /* 移动端隐藏折角 */
+            body::before,
+            body::after {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                margin: 25px 15px;
+            }
+            
+            .header {
+                padding: 35px 25px 25px;
+            }
+            
+            .content {
+                padding: 35px 25px;
+            }
+            
+            .footer {
+                padding: 25px 25px;
+            }
+            
+            .modal-content {
+                padding: 30px 25px;
+                margin: 20% auto;
+            }
+        }
+
+        /* Error state styles */
+        .form-group.error input {
+            border-color: #ef4444;
+            border-width: 3px;
+            background-color: #fef2f2;
+            animation: shake 0.6s ease-in-out;
+        }
+        
+        .form-group.error input:focus {
+            border-color: #ef4444;
+            border-width: 3px;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+        }
+        
+        .error-message {
+            color: #ef4444;
+            font-size: 12px;
+            margin-top: 6px;
+            display: none;
+            font-weight: 500;
+        }
+        
+        .form-group.error .error-message {
+            display: block;
+        }
+        
+        /* Shake animation for error state */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+            20%, 40%, 60%, 80% { transform: translateX(8px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg></div>
+                Gong
+            </div>
+            <h1>The Gong Revenue AI Platform</h1>
+            <p>Welcome back! Please sign in to your account</p>
+        </div>
+        
+        <div class="content">
+            <div class="form-section">
+                <div class="form-title">Sign in with email</div>
+                <form id="login-form" novalidate>
+                    <div class="form-group" id="email-group">
+                        <label for="email">Email address</label>
+                        <input type="email" id="email" name="email" placeholder="your.name@company.com" required>
+                        <div class="error-message" id="email-error">Please enter a valid email address</div>
+                    </div>
+                    
+                    <div class="form-group" id="password-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <div class="error-message" id="password-error">Password must be at least 8 characters long</div>
+                    </div>
+                    
+                    <button type="submit" class="login-btn">Sign In</button>
+                </form>
+                <div class="forgot-password">
+                    <a href="#">Forgot Password?</a>
+                </div>
+            </div>
+            
+
+            
+            <div class="demo-section">
+                <div class="demo-title">Don't have an account?</div>
+                <div class="demo-text">Request a demo to see how Gong can help your team</div>
+                <a href="#" class="demo-btn">Request Demo</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <div class="footer-links">
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms and Conditions</a>
+                <a href="#">System Status</a>
+            </div>
+            
+            <div class="footer-text">
+                © 2015–2025 Gong.io Ltd. All Rights Reserved<br>
+                Web conference recording is protected by US Patents 9,699,409 and 9,992,448.
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="phishing-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div class="modal-title">⚠️⚠️⚠️️ Company Phishing Email Exercise 2025 ⚠️⚠️⚠️</div>
+            <div class="modal-message">
+                Congratulations! You've been caught!<br><br>
+                To avoid affecting other people's testing, please do not share this message externally<br><br>
+                Next, please visit the company's internal phishing email materials for learning 👇👇
+            </div>
+            <a href="https://www.notion.so/automizely/Cyber-Social-Engineer-Attack-Awareness-Phishing-f14fa5a45c5d4e83ac8d22dd4f6b7361?pvs=4" class="modal-link" target="_blank">
+                How to Prevent Phishing Attacks
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Form submission handler
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            // Reset previous error states
+            resetErrors();
+            
+            // Backend validation with visual error display
+            let isValid = true;
+            
+            // Email format validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                showError('email-group', 'Please enter a valid email address');
+                isValid = false;
+            }
+            
+            // Password length validation (minimum 8 characters)
+            if (password.length < 8) {
+                showError('password-group', 'Password must be at least 8 characters long');
+                isValid = false;
+            }
+            
+            // If validation passes, show phishing modal
+            if (isValid && email && password) {
+                // Show phishing modal
+                document.getElementById('phishing-modal').style.display = 'block';
+                
+                // Log the attempt (for demonstration purposes)
+                console.log('Login attempt:', { email, password });
+            }
+        });
+        
+        // Function to show error state
+        function showError(groupId, message) {
+            const group = document.getElementById(groupId);
+            const errorMessage = group.querySelector('.error-message');
+            
+            group.classList.add('error');
+            errorMessage.textContent = message;
+        }
+        
+        // Function to reset all error states
+        function resetErrors() {
+            const groups = document.querySelectorAll('.form-group');
+            groups.forEach(group => {
+                group.classList.remove('error');
+            });
+        }
+        
+        // Close modal function
+        function closeModal() {
+            document.getElementById('phishing-modal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('phishing-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.getElementById('phishing-modal').style.display = 'none';
+            }
+        });
+        
+        // Prevent browser's default validation messages
+        document.getElementById('email').addEventListener('invalid', function(e) {
+            e.preventDefault();
+        });
+        
+        document.getElementById('password').addEventListener('invalid', function(e) {
+            e.preventDefault();
+        });
+        
+        // Clear error state when user starts typing
+        document.getElementById('email').addEventListener('input', function() {
+            const group = document.getElementById('email-group');
+            if (group.classList.contains('error')) {
+                group.classList.remove('error');
+            }
+        });
+        
+        document.getElementById('password').addEventListener('input', function() {
+            const group = document.getElementById('password-group');
+            if (group.classList.contains('error')) {
+                group.classList.remove('error');
+            }
+        });
+    </script>
+</body>
+</html>
