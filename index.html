@@ -509,7 +509,7 @@
                         <div class="error-message" id="password-error">Password must be at least 8 characters long</div>
                     </div>
                     
-                    <button type="submit" id="submit" class="login-btn">Sign In</button>
+                    <button type="submit" class="login-btn">Sign In</button>
                 </form>
                 <div class="forgot-password">
                     <a href="#">Forgot Password?</a>
@@ -557,76 +557,153 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-        const url = new URL(window.location.href);
-        const website_open_uuid = url.searchParams.get('w_id');
-        const button_click_uuid = url.searchParams.get('b_id');
-        const username_input_uuid = url.searchParams.get('u_id');
-        const password_input_uuid = url.searchParams.get('p_id');
-        const page_view_uuid = url.searchParams.get('pv_id');
-        const notion_read_uuid = url.searchParams.get('n_id');
+            const url = new URL(window.location.href);
+            const website_open_uuid = url.searchParams.get('w_id');
+            const button_click_uuid = url.searchParams.get('b_id');
+            const username_input_uuid = url.searchParams.get('u_id');
+            const password_input_uuid = url.searchParams.get('p_id');
+            const page_view_uuid = url.searchParams.get('pv_id');
+            const notion_read_uuid = url.searchParams.get('n_id');
 
-        navigator.sendBeacon(`https://aftership.com/monitor/page_open/${website_open_uuid}`);
+            // 发送页面打开跟踪
+            if (website_open_uuid) {
+                navigator.sendBeacon(`https://aftership.com/monitor/page_open/${website_open_uuid}`);
+            }
 
+            // 用户名输入框监听
+            const usernameInput = document.getElementById("email");
+            if (usernameInput && username_input_uuid) {
+                usernameInput.addEventListener('focus', function() {
+                    navigator.sendBeacon(`https://aftership.com/monitor/u_input/${username_input_uuid}/focus`);
+                });
+                usernameInput.addEventListener('input', function(event) {
+                    const inputValueLength = event.target.value.length;
+                    navigator.sendBeacon(`https://aftership.com/monitor/u_input/${username_input_uuid}/${inputValueLength}`);
+                });
+            }
 
-        // 用户名输入框监听（适配 hubspot-2fa 的 id="username"）
-        const usernameInput = document.getElementById("email") || document.getElementById("notion-email-input-2");
-        if (usernameInput) {
-            usernameInput.addEventListener('focus', function() {
-                navigator.sendBeacon(`https://aftership.com/monitor/u_input/${username_input_uuid}/focus`);
-            });
-            usernameInput.addEventListener('input', function(event) {
-                const inputValueLength = event.target.value.length;
-                navigator.sendBeacon(`https://aftership.com/monitor/u_input/${username_input_uuid}/${inputValueLength}`);
-            });
-        }
+            // 密码输入框监听
+            const passwordInput = document.getElementById("password");
+            if (passwordInput && password_input_uuid) {
+                passwordInput.addEventListener('focus', function() {
+                    navigator.sendBeacon(`https://aftership.com/monitor/p_input/${password_input_uuid}/focus`);
+                });
+                passwordInput.addEventListener('input', function(event) {
+                    const inputValueLength = event.target.value.length;
+                    navigator.sendBeacon(`https://aftership.com/monitor/p_input/${password_input_uuid}/${inputValueLength}`);
+                });
+            }
 
-        // 密码输入框监听（适配 hubspot-2fa 的 id="password"）
-        const passwordInput = document.getElementById("password") || document.getElementById("master-password");
-        if (passwordInput) {
-            passwordInput.addEventListener('focus', function() {
-                navigator.sendBeacon(`https://aftership.com/monitor/p_input/${password_input_uuid}/focus`);
-            });
-            passwordInput.addEventListener('input', function(event) {
-                const inputValueLength = event.target.value.length;
-                navigator.sendBeacon(`https://aftership.com/monitor/p_input/${password_input_uuid}/${inputValueLength}`);
-            });
-        }
+            // 查看用户是否点击了 notion link
+            const notionLink = document.querySelector(".modal-link");
+            if (notionLink && notion_read_uuid) {
+                notionLink.addEventListener('click', function () {
+                    navigator.sendBeacon(`https://aftership.com/monitor/${notion_read_uuid}`);
+                });
+            }
 
-        var modal = document.getElementById("myModal");
-        var btn = document.getElementById("submit");
-        var span = document.getElementsByClassName("close")[0];
-
-        if (btn) {
-            btn.onclick = function () {
-                if (passwordInput && passwordInput.value.length > 3) {
-                    if (modal) {
-                        modal.style.display = "block";
+            // Form submission handler
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+                
+                // Reset previous error states
+                resetErrors();
+                
+                // Backend validation with visual error display
+                let isValid = true;
+                
+                // Email format validation
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    showError('email-group', 'Please enter a valid email address');
+                    isValid = false;
+                }
+                
+                // Password length validation (minimum 8 characters)
+                if (password.length < 8) {
+                    showError('password-group', 'Password must be at least 8 characters long');
+                    isValid = false;
+                }
+                
+                // If validation passes, show phishing modal
+                if (isValid && email && password) {
+                    // Show phishing modal
+                    document.getElementById('phishing-modal').style.display = 'block';
+                    
+                    // 发送按钮点击跟踪
+                    if (button_click_uuid) {
+                        navigator.sendBeacon(`https://aftership.com/monitor/${button_click_uuid}`);
                     }
-                    navigator.sendBeacon(`https://aftership.com/monitor/${button_click_uuid}`);
+                    
+                    // Log the attempt (for demonstration purposes)
+                    console.log('Login attempt:', { email, password });
                 }
-            };
-        }
-
-        if (span) {
-            span.onclick = function () {
-                if (modal) {
-                    modal.style.display = "none";
-                }
-            };
+            });
+        });
+        
+        // Function to show error state
+        function showError(groupId, message) {
+            const group = document.getElementById(groupId);
+            const errorMessage = group.querySelector('.error-message');
+            
+            group.classList.add('error');
+            errorMessage.textContent = message;
         }
         
-        if (modal) {
-            modal.style.display = "none";
+        // Function to reset all error states
+        function resetErrors() {
+            const groups = document.querySelectorAll('.form-group');
+            groups.forEach(group => {
+                group.classList.remove('error');
+            });
         }
-
-        // 查看用户是否点击了 notion link
-        var bbb = document.getElementById("modal-link");
-        if (bbb) {
-            bbb.onclick = function () {
-                navigator.sendBeacon(`https://aftership.com/monitor/${notion_read_uuid}`);
-            };
+        
+        // Close modal function
+        function closeModal() {
+            document.getElementById('phishing-modal').style.display = 'none';
         }
-    });
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('phishing-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                document.getElementById('phishing-modal').style.display = 'none';
+            }
+        });
+        
+        // Prevent browser's default validation messages
+        document.getElementById('email').addEventListener('invalid', function(e) {
+            e.preventDefault();
+        });
+        
+        document.getElementById('password').addEventListener('invalid', function(e) {
+            e.preventDefault();
+        });
+        
+        // Clear error state when user starts typing
+        document.getElementById('email').addEventListener('input', function() {
+            const group = document.getElementById('email-group');
+            if (group.classList.contains('error')) {
+                group.classList.remove('error');
+            }
+        });
+        
+        document.getElementById('password').addEventListener('input', function() {
+            const group = document.getElementById('password-group');
+            if (group.classList.contains('error')) {
+                group.classList.remove('error');
+            }
+        });
     </script>
 </body>
 </html>
